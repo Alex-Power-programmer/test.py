@@ -8,7 +8,6 @@ class Storage(ABC):
         self._capacity = capacity
         self._items = items
 
-
     @abstractmethod
     def add(self, name, count):
         pass
@@ -22,7 +21,7 @@ class Storage(ABC):
         pass
 
     @property
-    def _get_items(self):
+    def get_items(self):
         return self._items
 
     @property

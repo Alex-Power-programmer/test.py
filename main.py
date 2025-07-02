@@ -1,26 +1,40 @@
+from helpers import load, welcome, from_store_in_shop, check_request, get_store_request
 from request_class import Request
 from shop_class import Shop
 from store_class import Store
 
-dict_a = {"cat": 100}
 
 def main():
     flag = True
+    list_store = [{"магазин": Shop}, {"склад": Store}]
+    list_stop = ['stop', 'exit', 'end']
     while flag:
-        list_store = [Store, Shop]
-        print('Привет давай работать!')
-        line = input()
+
+        line = welcome()
+        if line in list_stop:
+            flag = False
+            print('конец, я устал')
+            break
+
         request = Request(list_store, line)
-        count = request._amount
-        print(count)
-        print(request._from)
-        print(request._to)
-        print(request._product)
-        shop = Shop(items=dict_a)
-        places = shop.get_free_space()
-        print(places)
-        if places > 0:
-            print('dk')
+
+        count = request.amount
+        product = request.product
+
+        if not check_request(line):
+            store = request.to(items=load('store'))
+            store.add(product, count)
+            get_store_request(product, count)
+
+        else:
+            store = request.from_(items=load('store'))
+            shop = request.to(items=load('shop'))
+
+            storer = store.remove(product, count)
+            shoper = shop.add(product, count)
+
+            from_store_in_shop(shoper, storer, count, product)
+
 
 if __name__ == '__main__':
     main()
